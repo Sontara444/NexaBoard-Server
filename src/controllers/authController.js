@@ -19,14 +19,19 @@ const registerUser = asyncHandler(async (req, res) => {
         username,
         email,
         password,
+        lastLogin: new Date(),
     });
 
     if (user) {
         res.status(201).json({
-            _id: user._id,
-            username: user.username,
-            email: user.email,
+            success: true,
             token: generateToken(user._id),
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                name: user.username,
+            }
         });
     } else {
         res.status(400);
@@ -43,6 +48,8 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
+        user.lastLogin = new Date();
+        await user.save({ validateBeforeSave: false });
         res.json({
             success: true,
             token: generateToken(user._id),
@@ -51,6 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 username: user.username,
                 email: user.email,
                 name: user.username,
+                lastLogin: user.lastLogin,
             }
         });
     } else {
@@ -70,6 +78,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
             _id: user._id,
             username: user.username,
             email: user.email,
+            createdAt: user.createdAt,
+            lastLogin: user.lastLogin,
         });
     } else {
         res.status(404);
@@ -94,10 +104,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         const updatedUser = await user.save();
 
         res.json({
-            _id: updatedUser._id,
-            username: updatedUser.username,
-            email: updatedUser.email,
+            success: true,
             token: generateToken(updatedUser._id),
+            user: {
+                _id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                name: updatedUser.username,
+            }
         });
     } else {
         res.status(404);
