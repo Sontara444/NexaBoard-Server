@@ -13,7 +13,7 @@ const getTasks = asyncHandler(async (req, res) => {
 // @route   POST /api/tasks
 // @access  Private
 const createTask = asyncHandler(async (req, res) => {
-    const { title, description, status, dueDate } = req.body;
+    const { title, description, status, priority, dueDate } = req.body;
 
     if (!title) {
         res.status(400);
@@ -25,6 +25,7 @@ const createTask = asyncHandler(async (req, res) => {
         title,
         description,
         status,
+        priority,
         dueDate,
     });
 
