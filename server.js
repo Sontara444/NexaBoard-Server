@@ -10,7 +10,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: ['http://localhost:3000', 'http://localhost:3001', 'https://nexa-board-client.vercel.app'],
     credentials: true,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -31,7 +31,6 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
-// Health check route
 app.get('/', (req, res) => {
     res.send('Server is running');
 });
