@@ -1,17 +1,13 @@
 const asyncHandler = require('express-async-handler');
 const Task = require('../models/Task');
 
-// @desc    Get all tasks
-// @route   GET /api/tasks
-// @access  Private
+
 const getTasks = asyncHandler(async (req, res) => {
     const tasks = await Task.find({ user: req.user._id });
     res.json(tasks);
 });
 
-// @desc    Create a task
-// @route   POST /api/tasks
-// @access  Private
+
 const createTask = asyncHandler(async (req, res) => {
     const { title, description, status, priority, dueDate } = req.body;
 
@@ -32,9 +28,7 @@ const createTask = asyncHandler(async (req, res) => {
     res.status(201).json(task);
 });
 
-// @desc    Update a task
-// @route   PUT /api/tasks/:id
-// @access  Private
+
 const updateTask = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.id);
 
@@ -43,13 +37,11 @@ const updateTask = asyncHandler(async (req, res) => {
         throw new Error('Task not found');
     }
 
-    // Check for user
     if (!req.user) {
         res.status(401);
         throw new Error('User not found');
     }
 
-    // Make sure the logged in user matches the task user
     if (task.user.toString() !== req.user.id) {
         res.status(401);
         throw new Error('User not authorized');
@@ -62,9 +54,7 @@ const updateTask = asyncHandler(async (req, res) => {
     res.json(updatedTask);
 });
 
-// @desc    Delete a task
-// @route   DELETE /api/tasks/:id
-// @access  Private
+
 const deleteTask = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.id);
 
@@ -73,13 +63,11 @@ const deleteTask = asyncHandler(async (req, res) => {
         throw new Error('Task not found');
     }
 
-    // Check for user
     if (!req.user) {
         res.status(401);
         throw new Error('User not found');
     }
 
-    // Make sure the logged in user matches the task user
     if (task.user.toString() !== req.user.id) {
         res.status(401);
         throw new Error('User not authorized');
